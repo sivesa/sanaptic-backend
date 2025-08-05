@@ -44,7 +44,7 @@ The backend is built using:
 
 ### Prerequisites
 
-- Java 17+ (or Java 23)
+- Java 17+
 - Maven 3.8+
 - MySQL 8+
 - Postman (optional, for testing APIs)
