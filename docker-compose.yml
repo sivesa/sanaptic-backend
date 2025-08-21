@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sanaptics_mysql
+    restart: always
+    
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword12345
+      MYSQL_DATABASE: sanaptics_db
+      MYSQL_USER: sanaptics_user
+      MYSQL_PASSWORD: sanaptics_password12345
+    ports:
+      - "3306:3306"
+      
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql_data:/var/lib/mysql
+      
+    networks:
+      - sanaptics-network
+      
+    # Set command-line options for MySQL on startup.
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # The Spring Boot application service.
+  sanaptic-backend:
+    # Build the application image from the Dockerfile in the current directory.
+    build: .
+    
+    # Expose the application's port to the host.
+    ports:
+      - "8080:8080"
+      
+    # Define environment variables for the Spring Boot application's database connection.
+    environment:
+      # Use the service name 'mysql' as the host, as Docker Compose handles DNS resolution.
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sanaptics_db?useSSL=false
+      # Pass the username and password, referencing the values from the database service.
+      SPRING_DATASOURCE_USERNAME: sanaptics_user
+      SPRING_DATASOURCE_PASSWORD: sanaptics_password
+      # This property ensures Hibernate schema updates work correctly.
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      
+    # Ensure the database container is started before this one.
+    depends_on:
+      - mysql
+      
+    # Join the same network as the database container.
+    networks:
+      - sanaptics-network
+
+# Define the named volume for MySQL data persistence.
+volumes:
+  mysql_data:
+    driver: local
+
+# Define the network for inter-container communication.
+networks:
+  sanaptics-network:
+    driver: bridge

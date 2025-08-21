@@ -1,6 +1,6 @@
-# Sanaptics Backend
+# Sanaptic Backend
 
-Sanaptics is a scalable, modular Learning Platform (LMS) designed to empower education in underserved communities, starting with township schools and expanding globally. This repository hosts the **backend API** built with **Spring Boot**, serving as the core logic and data orchestration layer for the Sanaptics platform.
+Sanaptic is a scalable, modular Learning Platform (LMS) designed to empower education in underserved communities, starting with township schools and expanding globally. This repository hosts the **backend API** built with **Spring Boot**, serving as the core logic and data orchestration layer for the Sanaptic platform.
 
 ---
 
